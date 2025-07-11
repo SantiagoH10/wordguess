@@ -5,12 +5,12 @@ import { GameProvider } from './logic/useGame'
 
 function App() {
   return (
-    <>
+    <div className="min-h-screen bg-blue-100">
       <MySociabble />
       <GameProvider>
-      <Wordguess />
+        <Wordguess />
       </GameProvider>
-    </>
+    </div>
   )
 }
 

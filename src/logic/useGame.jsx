@@ -4,16 +4,31 @@ import { createContext, useContext } from 'react'
 function useGameLogic() {
   const [gameStatus, setGameStatus] = useState('newGame')
   const [word, setWord] = useState('')
+  const [wordPool, setWordPool] = useState([])
 
   const startGame = () => {
-    console.log("game set to play")
     setGameStatus('play')
+    setWord('')
+    setWordPool([])
+  }
+
+  const submitWord = () => {
+    const wordObj = {
+      id: Date.now() + Math.random(),
+      word: word,
+      score: Math.floor(Math.random()*100)+1,
+    }
+    setWordPool(prev => [...prev, wordObj])
     setWord('')
   }
 
   useEffect(() => {
     const handleKeyPress = event => {
-      console.log("key pressed", event.key)
+      if (gameStatus === 'newGame' && event.key === 'Enter') {
+        startGame()
+        return
+      }
+
       if (gameStatus !== 'play') return
 
       if (event.key === 'Backspace' || event.key === 'Delete') {
@@ -29,6 +44,12 @@ function useGameLogic() {
         console.log(word)
         return
       }
+
+      if (event.key === 'Enter') {
+        submitWord()
+        console.log(wordPool)
+        return
+      }
     }
 
     document.addEventListener('keydown', handleKeyPress)
@@ -42,6 +63,7 @@ function useGameLogic() {
     gameStatus,
     startGame,
     word,
+    wordPool,
   }
 }
 
@@ -51,9 +73,7 @@ export function GameProvider({ children }) {
   const gameState = useGameLogic()
 
   return (
-    <GameContext.Provider value={gameState}>
-      {children}
-    </GameContext.Provider>
+    <GameContext.Provider value={gameState}>{children}</GameContext.Provider>
   )
 }
 

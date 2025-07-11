@@ -1,51 +1,24 @@
-import { useState, useEffect } from 'react'
-import { Timer } from '../game-components/Timer'
-import { Button } from './Button'
+import { GameDashboard } from '../game-components/GameDashboard'
+import { GameOverlay } from '../game-components/GameOverlay'
+import { InputWord } from '../game-components/InputWord'
+import { WordPool } from '../game-components/WordPool'
 import { useGame } from '../logic/useGame'
-
-export function GameDashboard() {
-  const { gameStatus, startGame } = useGame()
-  return (
-    <div>
-      <Timer gameStatus={gameStatus} />
-      <Button onClick={startGame}>Start</Button>
-    </div>
-  )
-}
-
-function InputWord() {
-  const { gameStatus, word } = useGame()
-
-  return (
-    <div>
-      <input
-        className="rounded-full bg-zinc-200 px-4 py-1 font-mono text-zinc-600 shadow-md outline-none ring-1 ring-zinc-400 duration-300 placeholder:text-zinc-600 placeholder:opacity-50 focus:shadow-lg focus:shadow-rose-400 focus:ring-2 focus:ring-rose-400"
-        autoComplete="off"
-        placeholder="Guess a word"
-        name="text"
-        type="text"
-        value={word}
-        readOnly
-      />
-    </div>
-  )
-}
 
 function WordguessGame() {
   return (
-    <div>
+    <div className="container mx-auto flex flex-col items-center justify-center rounded-2xl border border-white/20 bg-white/10 px-3 py-2 shadow-xl backdrop-blur-md">
       <InputWord />
+      <WordPool />
     </div>
   )
 }
 
 export function Wordguess() {
   return (
-    <>
-      <div className="container bg-gray-200">
-        <GameDashboard />
-        <WordguessGame />
-      </div>
-    </>
+    <div className="container relative mx-auto flex gap-2 flex-col bg-gray-200 p-2">
+      <GameDashboard />
+      <WordguessGame />
+      <GameOverlay />
+    </div>
   )
 }
