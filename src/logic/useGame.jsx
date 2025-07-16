@@ -16,7 +16,7 @@ function useGameLogic() {
     const wordObj = {
       id: Date.now() + Math.random(),
       word: word,
-      score: Math.floor(Math.random()*100)+1,
+      score: Math.floor(Math.random() * 100) + 1,
     }
     setWordPool(prev => [...prev, wordObj])
     setWord('')

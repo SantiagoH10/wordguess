@@ -15,7 +15,7 @@ function WordguessGame() {
 
 export function Wordguess() {
   return (
-    <div className="container relative mx-auto flex gap-2 flex-col bg-gray-200 p-2">
+    <div className="container relative mx-auto flex flex-col gap-2 bg-gray-200 p-2">
       <GameDashboard />
       <WordguessGame />
       <GameOverlay />
