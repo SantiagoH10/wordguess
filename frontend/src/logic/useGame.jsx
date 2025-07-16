@@ -12,7 +12,6 @@ function useGameLogic() {
     setGameStatus('play')
     setWord('')
     setWordPool([])
-    setTargetWord(model.getRandomWord())
   }
 
   const submitWord = () => {

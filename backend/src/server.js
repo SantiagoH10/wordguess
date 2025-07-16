@@ -1,6 +1,6 @@
 import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
+import corsMiddleware from './middleware/cors.js';  // ← Add this
 import word2vecRoutes from './routes/word2vec.js';
 import indexRoutes from './routes/index.js';
 import errorHandler from './middleware/errorHandler.js';
@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // Middleware
-app.use(cors());
+app.use(corsMiddleware);  // ← Change this
 app.use(express.json());
 
 // Routes
