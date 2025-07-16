@@ -1,0 +1,33 @@
+{
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+  "editor.wordWrap": "on",
+  "editor.minimap.enabled": true,
+  "workbench.editor.showTabs": "multiple",
+  "editor.renderWhitespace": "boundary",
+  "javascript.suggest.autoImports": true,
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit",
+    "source.fixAll.eslint": "explicit"
+  },
+  "files.autoSave": "afterDelay",
+  "files.autoSaveDelay": 1000,
+  "editor.formatOnSave": true,
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact"
+  },
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "editor.tabCompletion": "on",
+  "editor.snippetSuggestions": "top",
+  "editor.acceptSuggestionOnEnter": "on",
+  "javascript.suggest.completeFunctionCalls": true,
+  "editor.quickSuggestionsDelay": 10,
+  "editor.wordBasedSuggestions": "off",
+  "editor.suggest.localityBonus": true,
+  "javascript.updateImportsOnFileMove.enabled": "always"
+}
