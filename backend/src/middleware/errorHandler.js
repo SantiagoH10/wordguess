@@ -1,14 +1,14 @@
 const errorHandler = (err, req, res, next) => {
-  console.error(err.stack);
+  console.error(err.stack)
 
   // Handle validation errors
   if (err.message.includes('Invalid')) {
     return res.status(400).json({
       error: {
         message: err.message,
-        type: 'ValidationError'
-      }
-    });
+        type: 'ValidationError',
+      },
+    })
   }
 
   // Handle Python script errors
@@ -17,9 +17,9 @@ const errorHandler = (err, req, res, next) => {
       error: {
         message: 'ML service error',
         type: 'MLServiceError',
-        ...(process.env.NODE_ENV === 'development' && { details: err.message })
-      }
-    });
+        ...(process.env.NODE_ENV === 'development' && { details: err.message }),
+      },
+    })
   }
 
   // Default error
@@ -27,9 +27,9 @@ const errorHandler = (err, req, res, next) => {
     error: {
       message: err.message || 'Internal Server Error',
       type: 'ServerError',
-      ...(process.env.NODE_ENV === 'development' && { stack: err.stack })
-    }
-  });
-};
+      ...(process.env.NODE_ENV === 'development' && { stack: err.stack }),
+    },
+  })
+}
 
-export default errorHandler;
+export default errorHandler

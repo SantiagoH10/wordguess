@@ -1,9 +1,9 @@
-import cors from 'cors';
+import cors from 'cors'
 
 const corsOptions = {
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
-  credentials: true,
-  optionsSuccessStatus: 200
-};
+  origin: '*', // Allow all origins
+  credentials: false, // Must be false when origin is '*'
+  optionsSuccessStatus: 200,
+}
 
-export default cors(corsOptions);
+export default cors(corsOptions)

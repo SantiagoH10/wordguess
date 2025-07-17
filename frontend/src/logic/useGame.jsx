@@ -1,17 +1,63 @@
-import { useState, useEffect } from 'react'
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
 function useGameLogic() {
   const [gameStatus, setGameStatus] = useState('newGame')
   const [word, setWord] = useState('')
   const [wordPool, setWordPool] = useState([])
-  const [model, setModel] = useState(null)
+  const [model, setModel] = useState('glove-wiki-gigaword-100')
   const [targetWord, setTargetWord] = useState('')
+  const [error, setError] = useState(null)
 
-  const startGame = () => {
-    setGameStatus('play')
-    setWord('')
-    setWordPool([])
+  // API request function
+  const getRandomWord = async (selectedModel = model) => {
+    const url = 'http://localhost:3001/api/word2vec/random'
+
+    try {
+      console.log('Making request to:', url)
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+        }),
+      })
+
+      console.log('Response status:', response.status)
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
+      return data.word
+    } catch (err) {
+      console.error('❌ Fetch failed:', err)
+      console.error('❌ Error details:', err.message)
+      throw new Error(`Failed to get random word: ${err.message}`)
+    }
+  }
+
+  const startGame = async () => {
+    setError(null)
+    setGameStatus('loading')
+
+    try {
+      const randomWord = await getRandomWord(model)
+      setTargetWord(randomWord)
+      setGameStatus('play')
+      setWord('')
+      setWordPool([])
+    } catch (err) {
+      setError(err.message)
+      setGameStatus('newGame')
+    }
   }
 
   const submitWord = () => {
@@ -39,7 +85,7 @@ function useGameLogic() {
       }
 
       const key = event.key.toUpperCase()
-      const isLetter = new RegExp('^[a-zA-Z]$').test(key)
+      const isLetter = /^[a-zA-Z]$/.test(key)
 
       if (isLetter) {
         setWord(w => w + key)
@@ -66,6 +112,10 @@ function useGameLogic() {
     startGame,
     word,
     wordPool,
+    targetWord,
+    model,
+    setModel,
+    error,
   }
 }
 

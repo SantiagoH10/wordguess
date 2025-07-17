@@ -1,18 +1,18 @@
-import express from 'express';
+import express from 'express'
 
-const router = express.Router();
+const router = express.Router()
 
 // General API endpoints
 router.get('/', (req, res) => {
-  res.json({ message: 'WordGuess API' });
-});
+  res.json({ message: 'WordGuess API' })
+})
 
 router.get('/status', (req, res) => {
   res.json({
     api: 'WordGuess API',
     version: '1.0.0',
-    timestamp: new Date().toISOString()
-  });
-});
+    timestamp: new Date().toISOString(),
+  })
+})
 
-export default router;
+export default router
