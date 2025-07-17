@@ -20,11 +20,6 @@ app.use((req, res, next) => {
   next()
 })
 
-//Useless route
-app.get('/', (req, res) => {
-  res.json({ message: 'WordGuess API Server' })
-})
-
 // Routes
 app.use('/api/word2vec', word2vecRoutes)
 app.use('/api', indexRoutes)

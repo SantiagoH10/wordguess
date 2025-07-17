@@ -10,7 +10,7 @@ function useGameLogic() {
 
   // API request function
   const getRandomWord = async (selectedModel = model) => {
-    const url = 'https://legendary-computing-machine-4jww6g54xgqqfj9x4-3001.app.github.dev/'
+    const url = 'https://legendary-computing-machine-4jww6g54xgqqfj9x4-3001.app.github.dev/api/word2vec/random'
 
     try {
       console.log('Making request to:', url)
