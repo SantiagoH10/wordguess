@@ -1,6 +1,6 @@
 import express from 'express'
 import dotenv from 'dotenv'
-import corsMiddleware from './middleware/cors.js'
+import cors from 'cors'
 import word2vecRoutes from './routes/word2vec.js'
 import indexRoutes from './routes/index.js'
 import errorHandler from './middleware/errorHandler.js'
@@ -11,7 +11,7 @@ const app = express()
 const PORT = process.env.PORT || 3001
 
 // Middleware
-app.use(corsMiddleware)
+app.use(cors())
 app.use(express.json())
 
 //Logging
@@ -20,11 +20,12 @@ app.use((req, res, next) => {
   next()
 })
 
-// Routes
+//Useless route
 app.get('/', (req, res) => {
   res.json({ message: 'WordGuess API Server' })
 })
 
+// Routes
 app.use('/api/word2vec', word2vecRoutes)
 app.use('/api', indexRoutes)
 

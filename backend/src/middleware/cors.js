@@ -1,8 +1,8 @@
 import cors from 'cors'
 
 const corsOptions = {
-  origin: '*', // Allow all origins
-  credentials: false, // Must be false when origin is '*'
+  origin: '*',
+  credentials: false,
   optionsSuccessStatus: 200,
 }
 
