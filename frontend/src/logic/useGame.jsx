@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import { getApiUrl, API_CONFIG } from '../config/api.js'
 
 function useGameLogic() {
   const [gameStatus, setGameStatus] = useState('newGame')
@@ -8,13 +9,11 @@ function useGameLogic() {
   const [targetWord, setTargetWord] = useState('')
   const [error, setError] = useState(null)
 
-  // API request function
+  //#region API request functions
   const getRandomWord = async (selectedModel = model) => {
-    const url =
-      'https://legendary-computing-machine-4jww6g54xgqqfj9x4-3001.app.github.dev/api/word2vec/random'
+    const url = getApiUrl(API_CONFIG.ENDPOINTS.RANDOM_WORD)
 
     try {
-      console.log('Making request to:', url)
       const response = await fetch(url, {
         method: 'POST',
         headers: {
@@ -45,6 +44,28 @@ function useGameLogic() {
     }
   }
 
+  const compareWords = async (selectedModel = model, word1, word2) => {
+    const url = getApiUrl(API_CONFIG.ENDPOINTS.SIMILAR_WORDS)
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          model: selectedModel,
+          word1: word1,
+          word2: word2,
+        }),
+      })
+    } catch (e) {
+      console.error('Compare words fetch failed:', e)
+      throw new Error(`Failed to compare words: ${e.message}`)
+    }
+  }
+  //#endregion
+
   const startGame = async () => {
     setError(null)
     setGameStatus('loading')
@@ -61,14 +82,24 @@ function useGameLogic() {
     }
   }
 
-  const submitWord = () => {
-    const wordObj = {
-      id: Date.now() + Math.random(),
-      word: word,
-      score: Math.floor(Math.random() * 100) + 1,
+  const submitWord = async guessWord => {
+    if (guessWord === targetWord) {
+      setGameStatus('gameOver')
+      return
     }
-    setWordPool(prev => [...prev, wordObj])
-    setWord('')
+
+    try {
+      const similScore = await compareWords(model, targetWord, guessWord)
+      const wordObj = {
+        id: Date.now() + Math.random(),
+        word: word,
+        score: similScore,
+      }
+      setWordPool(prev => [...prev, wordObj])
+      setWord('')
+    } catch (e) {
+      console.error('Unable to submit word and get score', e.mesage)
+    }
   }
 
   useEffect(() => {
@@ -95,7 +126,7 @@ function useGameLogic() {
       }
 
       if (event.key === 'Enter') {
-        submitWord()
+        submitWord(word)
         console.log(wordPool)
         return
       }
