@@ -102,6 +102,8 @@ function useGameLogic() {
       return
     }
 
+    setGameStatus('isComparing')
+
     try {
       const similScore = await compareWords(model, targetWord, guessWord)
       const wordObj = {
@@ -113,6 +115,8 @@ function useGameLogic() {
       setWord('')
     } catch (e) {
       console.error('Unable to submit word and get score', e.message)
+    } finally {
+      setGameStatus('play')
     }
   }
 
