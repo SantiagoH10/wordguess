@@ -120,6 +120,23 @@ function useGameLogic() {
     }
   }
 
+  const changeModel = async newModel => {
+    setError(null)
+    setGameStatus('loading')
+    setModel(newModel)
+
+    try {
+      const randomWord = await getRandomWord(model)
+      setTargetWord(randomWord)
+      setGameStatus('play')
+      setWord('')
+      setWordPool([])
+    } catch (err) {
+      setError(err.message)
+      setGameStatus('newGame')
+    }
+  }
+
   useEffect(() => {
     const handleKeyPress = event => {
       if (
@@ -167,6 +184,7 @@ function useGameLogic() {
     model,
     model,
     error,
+    changeModel,
   }
 }
 
