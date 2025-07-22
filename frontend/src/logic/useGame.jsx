@@ -162,7 +162,7 @@ function useGameLogic() {
     wordPool,
     targetWord,
     model,
-    setModel,
+    model,
     error,
   }
 }

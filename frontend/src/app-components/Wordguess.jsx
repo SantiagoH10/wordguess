@@ -3,6 +3,8 @@ import { GameOverlay } from '../game-components/GameOverlay'
 import { InputWord } from '../game-components/InputWord'
 import { TargetWord } from '../game-components/TargetWord'
 import { WordPool } from '../game-components/WordPool'
+import { ModelSelector
+ } from '../game-components/ModelSelector'
 import { useGame } from '../logic/useGame'
 
 function WordguessGame() {
@@ -18,6 +20,7 @@ function WordguessGame() {
 export function Wordguess() {
   return (
     <div className="container relative mx-auto flex flex-col gap-2 bg-white p-2">
+      <ModelSelector />
       <GameDashboard />
       <WordguessGame />
       <GameOverlay />
