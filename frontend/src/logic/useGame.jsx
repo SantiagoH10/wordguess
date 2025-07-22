@@ -122,7 +122,10 @@ function useGameLogic() {
 
   useEffect(() => {
     const handleKeyPress = event => {
-      if (['newGame', 'gameOver'].includes(gameStatus) && event.key === 'Enter') {
+      if (
+        ['newGame', 'gameOver'].includes(gameStatus) &&
+        event.key === 'Enter'
+      ) {
         startGame()
         return
       }

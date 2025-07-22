@@ -1,7 +1,7 @@
-import { useGame } from "../logic/useGame"
+import { useGame } from '../logic/useGame'
 
 export function ModelSelector() {
-  const {model} = useGame()
+  const { model } = useGame()
   return (
     <div className="container mx-auto flex justify-center rounded-2xl border border-white/20 bg-white/10 px-3 py-2 shadow-xl backdrop-blur-md">
       <p>Current model : {model}</p>

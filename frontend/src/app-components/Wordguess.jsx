@@ -3,8 +3,7 @@ import { GameOverlay } from '../game-components/GameOverlay'
 import { InputWord } from '../game-components/InputWord'
 import { TargetWord } from '../game-components/TargetWord'
 import { WordPool } from '../game-components/WordPool'
-import { ModelSelector
- } from '../game-components/ModelSelector'
+import { ModelSelector } from '../game-components/ModelSelector'
 import { useGame } from '../logic/useGame'
 
 function WordguessGame() {

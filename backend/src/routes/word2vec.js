@@ -1,40 +1,55 @@
 import express from 'express'
-import PythonRunner from '../utils/pythonRunner.js'
+import axios from 'axios'
 import { validateWord, validateModel } from '../utils/validation.js'
 
 const router = express.Router()
 
-// Helper function to run Python script
-async function runWord2VecScript(args) {
-  const scriptPath =
-    process.env.PYTHON_SCRIPT_PATH || '../ml-service/scripts/word2vec_cli.py'
-  return await PythonRunner.runScript(scriptPath, args)
-}
+// Flask service configuration
+const FLASK_SERVICE_URL =
+  process.env.FLASK_SERVICE_URL || 'http://localhost:5000'
+const REQUEST_TIMEOUT = parseInt(process.env.FLASK_REQUEST_TIMEOUT) || 30000
 
-// Get similar words
-router.post('/similar', async (req, res, next) => {
+// Helper function to call Flask service
+async function callFlaskService(
+  endpoint,
+  method = 'POST',
+  data = null,
+  params = null,
+) {
   try {
-    const { word, model = 'glove-wiki-gigaword-100', top_n = 10 } = req.body
+    const config = {
+      method,
+      url: `${FLASK_SERVICE_URL}/api${endpoint}`,
+      timeout: REQUEST_TIMEOUT,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
 
-    const validatedWord = validateWord(word)
-    const validatedModel = validateModel(model)
+    if (data) config.data = data
+    if (params) config.params = params
 
-    const result = await runWord2VecScript([
-      '--operation',
-      'similar',
-      '--model',
-      validatedModel,
-      '--word',
-      validatedWord,
-      '--top_n',
-      top_n.toString(),
-    ])
-
-    res.json(result)
+    const response = await axios(config)
+    return response.data
   } catch (error) {
-    next(error)
+    // Handle Flask service errors
+    if (error.response) {
+      // Flask returned an error response
+      const flaskError = error.response.data
+      const errorMessage = flaskError.message || 'Flask service error'
+      const serviceError = new Error(errorMessage)
+      serviceError.statusCode = error.response.status
+      serviceError.details = flaskError
+      throw serviceError
+    } else if (error.code === 'ECONNREFUSED') {
+      throw new Error('ML service is unavailable. Please try again later.')
+    } else if (error.code === 'ETIMEDOUT') {
+      throw new Error('ML service request timed out. Please try again.')
+    } else {
+      throw new Error(`ML service error: ${error.message}`)
+    }
   }
-})
+}
 
 // Compare two words
 router.post('/compare', async (req, res, next) => {
@@ -45,16 +60,11 @@ router.post('/compare', async (req, res, next) => {
     const validatedWord2 = validateWord(word2)
     const validatedModel = validateModel(model)
 
-    const result = await runWord2VecScript([
-      '--operation',
-      'compare',
-      '--model',
-      validatedModel,
-      '--word1',
-      validatedWord1,
-      '--word2',
-      validatedWord2,
-    ])
+    const result = await callFlaskService('/compare', 'POST', {
+      word1: validatedWord1,
+      word2: validatedWord2,
+      model: validatedModel,
+    })
 
     res.json(result)
   } catch (error) {
@@ -69,12 +79,9 @@ router.post('/random', async (req, res, next) => {
 
     const validatedModel = validateModel(model)
 
-    const result = await runWord2VecScript([
-      '--operation',
-      'random',
-      '--model',
-      validatedModel,
-    ])
+    const result = await callFlaskService('/random', 'POST', {
+      model: validatedModel,
+    })
 
     res.json(result)
   } catch (error) {
@@ -90,14 +97,10 @@ router.post('/exists', async (req, res, next) => {
     const validatedWord = validateWord(word)
     const validatedModel = validateModel(model)
 
-    const result = await runWord2VecScript([
-      '--operation',
-      'exists',
-      '--model',
-      validatedModel,
-      '--word',
-      validatedWord,
-    ])
+    const result = await callFlaskService('/exists', 'POST', {
+      word: validatedWord,
+      model: validatedModel,
+    })
 
     res.json(result)
   } catch (error) {
@@ -112,12 +115,9 @@ router.get('/info', async (req, res, next) => {
 
     const validatedModel = validateModel(model)
 
-    const result = await runWord2VecScript([
-      '--operation',
-      'info',
-      '--model',
-      validatedModel,
-    ])
+    const result = await callFlaskService('/info', 'GET', null, {
+      model: validatedModel,
+    })
 
     res.json(result)
   } catch (error) {
