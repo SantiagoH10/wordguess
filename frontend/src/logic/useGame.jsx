@@ -1,5 +1,6 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { getApiUrl, API_CONFIG } from '../config/api.js'
+import { convertToGameScore } from '../helpers/convertToGameScore.js'
 
 function useGameLogic() {
   const [gameStatus, setGameStatus] = useState('newGame')
@@ -36,6 +37,7 @@ function useGameLogic() {
         throw new Error(data.error)
       }
 
+      console.log(data.word)
       return data.word
     } catch (err) {
       console.error('❌ Fetch failed:', err)
@@ -45,7 +47,7 @@ function useGameLogic() {
   }
 
   const compareWords = async (selectedModel = model, word1, word2) => {
-    const url = getApiUrl(API_CONFIG.ENDPOINTS.SIMILAR_WORDS)
+    const url = getApiUrl(API_CONFIG.ENDPOINTS.COMPARE_WORDS)
 
     try {
       const response = await fetch(url, {
@@ -59,6 +61,18 @@ function useGameLogic() {
           word2: word2,
         }),
       })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      if (data.error) {
+        throw new Error(data.error)
+      }
+
+      return data.similarity
     } catch (e) {
       console.error('Compare words fetch failed:', e)
       throw new Error(`Failed to compare words: ${e.message}`)
@@ -93,18 +107,18 @@ function useGameLogic() {
       const wordObj = {
         id: Date.now() + Math.random(),
         word: word,
-        score: similScore,
+        score: convertToGameScore(similScore),
       }
       setWordPool(prev => [...prev, wordObj])
       setWord('')
     } catch (e) {
-      console.error('Unable to submit word and get score', e.mesage)
+      console.error('Unable to submit word and get score', e.message)
     }
   }
 
   useEffect(() => {
     const handleKeyPress = event => {
-      if (gameStatus === 'newGame' && event.key === 'Enter') {
+      if (['newGame', 'gameOver'].includes(gameStatus) && event.key === 'Enter') {
         startGame()
         return
       }
@@ -116,18 +130,16 @@ function useGameLogic() {
         return
       }
 
-      const key = event.key.toUpperCase()
+      const key = event.key.toLowerCase()
       const isLetter = /^[a-zA-Z]$/.test(key)
 
       if (isLetter) {
         setWord(w => w + key)
-        console.log(word)
         return
       }
 
       if (event.key === 'Enter') {
         submitWord(word)
-        console.log(wordPool)
         return
       }
     }
