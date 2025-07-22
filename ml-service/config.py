@@ -9,7 +9,6 @@ class Config:
     """
     Base configuration class
     """
-
     # Flask Settings
     SECRET_KEY = os.environ.get('SECRET_KEY', 'word2vec-ml-service-secret-key-change-in-production')
     JSON_SORT_KEYS = False
@@ -27,7 +26,7 @@ class Config:
     CORS_METHODS = ['GET', 'POST', 'OPTIONS']
 
     # Model Settings
-    DEFAULT_MODEL = os.environ.get('DEFAULT_MODEL', 'glove-wiki-gigaword-100')
+    DEFAULT_MODEL = os.environ.get('DEFAULT_MODEL', 'word2vec-google-news-300')
     PRELOAD_DEFAULT_MODEL = os.environ.get('PRELOAD_DEFAULT_MODEL', 'True').lower() in ['true', '1', 'yes']
     MODEL_CACHE_SIZE_LIMIT = int(os.environ.get('MODEL_CACHE_SIZE_LIMIT', 5))  # Max models in memory
     MODEL_LOAD_TIMEOUT = int(os.environ.get('MODEL_LOAD_TIMEOUT', 300))  # 5 minutes

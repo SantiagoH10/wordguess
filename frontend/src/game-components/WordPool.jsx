@@ -285,7 +285,7 @@ const WarmCard = ({ word, score }) => {
 }
 
 const WordCard = ({ word, score }) => {
-  if (score <= 50) {
+  if (score <= 60) {
     return <FrozenCard word={word} score={score} />
   } else if (score <= 80) {
     return <WarmCard word={word} score={score} />

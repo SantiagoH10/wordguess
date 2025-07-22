@@ -1,5 +1,7 @@
 import { useGame } from '../logic/useGame'
 
+const MODELS = ['glove-wiki-gigaword-100', 'word2vec-google-news-300']
+
 export function ModelSelector() {
   const { model } = useGame()
   return (

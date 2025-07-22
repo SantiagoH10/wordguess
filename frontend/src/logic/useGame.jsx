@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { getApiUrl, API_CONFIG } from '../config/api.js'
+import { API_CONFIG, getApiUrl } from '../config/api.js'
 import { convertToGameScore } from '../helpers/convertToGameScore.js'
 
 function useGameLogic() {

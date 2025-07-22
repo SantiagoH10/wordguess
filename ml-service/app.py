@@ -3,6 +3,8 @@ from flask_cors import CORS
 import logging
 import os
 from datetime import datetime
+import sys
+import traceback
 
 from routes.word2vec import word2vec_bp
 from utils.model_manager import ModelManager
